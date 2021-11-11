@@ -23,7 +23,7 @@ if (everythingWentWellInAProcess()) {
   return Result.success(content);
 }
 
-if (something.doesNotMeetOurExpectations) {
+if (something.doesNotMeetOurExpectations()) {
   return Result.unprocessable("Reason");
 }
 
