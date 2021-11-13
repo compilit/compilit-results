@@ -7,7 +7,6 @@ Get this dependency with the latest version
     <dependency>
       <artifactId>solidcoding-results</artifactId>
       <groupId>org.solidcoding</groupId>
-      <version>1.0.0.RELEASE</version>
     </dependency>
 ```
 
