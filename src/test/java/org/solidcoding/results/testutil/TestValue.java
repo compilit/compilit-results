@@ -1,4 +1,4 @@
-package world.solidcoding.results.testutil;
+package org.solidcoding.results.testutil;
 
 public class TestValue {
   public static final String TEST_CONTENT = "test content";

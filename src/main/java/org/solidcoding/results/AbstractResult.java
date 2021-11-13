@@ -1,4 +1,4 @@
-package world.solidcoding.results;
+package org.solidcoding.results;
 
 import java.util.Optional;
 

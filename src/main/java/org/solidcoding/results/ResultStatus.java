@@ -1,4 +1,4 @@
-package world.solidcoding.results;
+package org.solidcoding.results;
 
 public enum ResultStatus {
   SUCCESS,

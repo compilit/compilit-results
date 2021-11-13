@@ -1,4 +1,4 @@
-package world.solidcoding.results;
+package org.solidcoding.results;
 
 class SuccessResult<T> extends AbstractResult<T> {
 

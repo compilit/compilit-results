@@ -1,7 +1,7 @@
-package world.solidcoding.results.assertions;
+package org.solidcoding.results.assertions;
 
 import org.assertj.core.api.AbstractAssert;
-import world.solidcoding.results.Result;
+import org.solidcoding.results.Result;
 
 public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Result<T>> {
 

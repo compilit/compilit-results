@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <artifactId>solidcoding-results</artifactId>
-  <groupId>world.solidcoding</groupId>
+  <groupId>org.solidcoding</groupId>
   <dependencies>
     <dependency>
       <artifactId>assertj-core</artifactId>
@@ -40,4 +40,13 @@
   </properties>
 
   <version>1.0.0.RELEASE</version>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Harvey the Rabbit Apache Maven Packages</name>
+      <url>https://maven.pkg.github.com/harveytherabbit/solidcoding-results</url>
+    </repository>
+  </distributionManagement>
+
 </project>
