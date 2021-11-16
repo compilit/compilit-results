@@ -5,6 +5,7 @@ import org.solidcoding.results.Result;
 
 public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Result<T>> {
 
+  
   protected ResultAssertions(Result<T> result) {
     super(result, ResultAssertions.class);
   }
@@ -20,14 +21,27 @@ public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Res
     return this;
   }
 
+  public ResultAssertions<T> hasContent() {
+    if (!actual.hasContents()) {
+      failWithMessage("Expected Result to have content but was empty");
+    }
+    return this;
+  }
+
+  public ResultAssertions<T> isEmpty() {
+    if (!actual.isEmpty()) {
+      failWithMessage("Expected Result to have no content but was it did");
+    }
+    return this;
+  }
+
   public ResultAssertions<T> containsContent(T content) {
     if (!actual.hasContents()) {
       failWithMessage("Expected Result to have content but was empty");
     }
-    if (!actual.getContents().get().equals(content)) {
-      failWithMessage("Expected Result to have content equal to %s but was %s",
-                      content,
-                      actual.getContents().get());
+    if (!actual.getContents().equals(content)) {
+      failWithMessage(
+          "Expected Result to have content equal to %s but was %s", content, actual.getContents());
     }
     return this;
   }
@@ -41,7 +55,8 @@ public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Res
 
   public ResultAssertions<T> containsMessage(String message) {
     if (!actual.getMessage().equals(message)) {
-      failWithMessage("Expected Result to have a message equal to %s but was %s", message, actual.getMessage());
+      failWithMessage(
+          "Expected Result to have a message equal to %s but was %s", message, actual.getMessage());
     }
     return this;
   }
