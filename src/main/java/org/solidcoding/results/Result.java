@@ -167,23 +167,27 @@ public interface Result<T> {
     }
   }
 
-    /**
+  /**
    * Transforms an existing Result into another one with a different content type.
    *
    * @param result the existing Result.
    * @param <T> the content type of the new Result.
    * @return Result<T>
    */
-  static <T> Result<T> transform(Result<?> result) {
+  static <T> Result<T> transform(Result<?> result, T content) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
-    return Result.<T>of(resultStatus, resultMessage);
+    return Result.of(resultStatus, resultMessage, content);
   }
 
   private static <T> Result<T> of(ResultStatus resultStatus, String message) {
+    return of(resultStatus, message, null);
+  }
+
+  private static <T> Result<T> of(ResultStatus resultStatus, String message, T content) {
     switch (resultStatus) {
       case SUCCESS:
-        return Result.success();
+        return Result.success(content);
       case UNAUTHORIZED:
         return Result.unauthorized(message);
       case NOT_FOUND:
