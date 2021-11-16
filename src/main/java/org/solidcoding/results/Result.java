@@ -6,7 +6,7 @@ import java.util.function.Supplier;
 
 public interface Result<T> {
 
-  /**
+   /**
    * A generic success result for a process or validation.
    *
    * @param <T> the type of the contents.
@@ -20,10 +20,11 @@ public interface Result<T> {
    * A generic success result for a process or validation.
    *
    * @param contents the contents of the result.
-   * @param <T>      the type of the contents.
+   * @param <T> the type of the contents.
    * @return a success Result with contents.
    */
   static <T> Result<T> success(T contents) {
+    if (contents == null) return new EmptyResourceResult<>();
     return new SuccessResult<>(contents);
   }
 
@@ -77,7 +78,7 @@ public interface Result<T> {
    * A generic failure result. Can be used for pretty much any failed process or validation.
    *
    * @param message the error message.
-   * @param <T>     the type of the contents.
+   * @param <T> the type of the contents.
    * @return an unprocessable Result with a message.
    */
   static <T> Result<T> unprocessable(String message) {
@@ -133,12 +134,13 @@ public interface Result<T> {
    * Exception, it returns an ErrorOccurredResult with the exception message added to the Result.
    *
    * @param supplier the content-supplying function.
-   * @param <T>      the type of the contents.
+   * @param <T> the type of the contents.
    * @return Result.
    */
   static <T> Result<T> fromDelegate(Supplier<T> supplier) {
     try {
       var result = supplier.get();
+      if (result == null) return Result.emptyResource();
       return Result.success(result);
     } catch (Exception exception) {
       return Result.errorOccurred(exception.getMessage());
@@ -146,13 +148,14 @@ public interface Result<T> {
   }
 
   /**
-   * A generic result that encapsulates a predicate. Returns a Success result with the value
-   * if the predicate resolves to true. And an Unprocessable result if it resolves to false. If the Predicate throws an Exception, it
-   * returns an ErrorOccurredResult with the exception message added to the Result
+   * A generic result that encapsulates a predicate. Returns a Success result with the value if the
+   * predicate resolves to true. And an Unprocessable result if it resolves to false. If the
+   * Predicate throws an Exception, it returns an ErrorOccurredResult with the exception message
+   * added to the Result
    *
    * @param predicate the predicate which to apply to the value.
    * @param value the value which needs to be tested by the predicate.
-   * @param <T>      the type of the contents.
+   * @param <T> the type of the contents.
    * @return Result.
    */
   static <T> Result<T> fromDelegate(Predicate<T> predicate, T value) {
@@ -174,10 +177,32 @@ public interface Result<T> {
    * @param <T> the content type of the new Result.
    * @return Result<T>
    */
+  static <T> Result<T> transform(Result<?> result) {
+    var resultStatus = result.getResultStatus();
+    var resultMessage = result.getMessage();
+    return Result.of(resultStatus, resultMessage);
+  }
+
+  /**
+   * Transforms an existing Result into another one with a different content type.
+   *
+   * @param result the existing Result.
+   * @param <T> the content type of the new Result.
+   * @return Result<T>
+   */
   static <T> Result<T> transform(Result<?> result, T content) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
     return Result.of(resultStatus, resultMessage, content);
+  }
+
+  /**
+   * @param optional the optional value of the result to return.
+   * @param <T> the content type of the new Result.
+   * @return Result<T>
+   */
+  static <T> Result<T> fromOptional(Optional<T> optional) {
+    return optional.map(Result::success).orElseGet(Result::emptyResource);
   }
 
   private static <T> Result<T> of(ResultStatus resultStatus, String message) {
@@ -200,34 +225,28 @@ public interface Result<T> {
         return Result.unprocessable(message);
     }
   }
-  
-  /**
-   * @return the ResultStatus of the result.
-   */
+
+  /** @return the ResultStatus of the result. */
   ResultStatus getResultStatus();
 
-  /**
-   * @return true if the ResultStatus equals SUCCESS or EMPTY_RESOURCE.
-   */
+  /** @return true if the ResultStatus equals SUCCESS or EMPTY_RESOURCE. */
   boolean isSuccessful();
 
-  /**
-   * @return true if the ResultStatus does not equal SUCCESS or EMPTY_RESOURCE.
-   */
+  /** @return true if the ResultStatus equals SUCCESS or EMPTY_RESOURCE and has contents */
+  boolean isSuccessfulWithContents();
+
+  /** @return true if the ResultStatus does not equal SUCCESS or EMPTY_RESOURCE. */
   boolean isUnsuccessful();
 
-  /**
-   * @return true if the Result has contents.
-   */
+  /** @return true if the Result has contents. */
   boolean hasContents();
 
-  /**
-   * @return the optional contents of the result.
-   */
-  Optional<T> getContents();
+  /** @return true if the Result has no contents. */
+  boolean isEmpty();
 
-  /**
-   * @return the message of the result if present.
-   */
+  /** @return the contents of the result. Can be null */
+  T getContents();
+
+  /** @return the message of the result if present. */
   String getMessage();
 }
