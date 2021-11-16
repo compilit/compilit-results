@@ -136,5 +136,29 @@ class ResultTests {
                     .isValidUnsuccessfulResult()
                     .containsMessage(message);
   }
+  
+  @Test
+  void isEmpty_emptyResult_shouldReturnTrue() {
+    var result = Result.emptyResource();
+    Assertions.assertThat(result.isEmpty()).isTrue();
+  }
 
+  @Test
+  void isEmpty_filledResult_shouldReturnFalse() {
+    var result = Result.success("test");
+    Assertions.assertThat(result.isEmpty()).isFalse();
+  }
+
+  @Test
+  void isSuccessfulWithContents_successfulEmptyResult_shouldReturnFalse() {
+    var result = Result.emptyResource();
+    Assertions.assertThat(result.isSuccessfulWithContents()).isFalse();
+  }
+
+  @Test
+  void isSuccessfulWithContents_successfulFilledResult_shouldReturnTrue() {
+    var result = Result.success("test");
+    Assertions.assertThat(result.isSuccessfulWithContents()).isTrue();
+  }
+  
 }
