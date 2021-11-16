@@ -13,7 +13,8 @@ class ResultTests {
 
   @Test
   void success_shouldReturnSuccessResult() {
-    ResultAssertions.assertThat(Result.success()).isValidSuccessResult();
+    ResultAssertions.assertThat(Result.success()).isValidSuccessResult()
+                    .isEmpty();
   }
 
   @Test
@@ -25,8 +26,8 @@ class ResultTests {
 
   @Test
   void emptyResource_shouldReturnSuccessResult() {
-    ResultAssertions.assertThat(Result.emptyResource())
-                    .isValidSuccessResult();
+    ResultAssertions.assertThat(Result.emptyResource()).isValidSuccessResult()
+                    .isEmpty();
   }
 
   @Test
@@ -38,7 +39,8 @@ class ResultTests {
 
   @Test
   void notFound_shouldReturnNotFoundResult() {
-    ResultAssertions.assertThat(Result.notFound()).isValidUnsuccessfulResult();
+    ResultAssertions.assertThat(Result.notFound()).isValidUnsuccessfulResult()
+                    .isEmpty();
   }
 
   @Test
@@ -51,7 +53,8 @@ class ResultTests {
   @Test
   void unprocessable_shouldReturnUnprocessableResult() {
     ResultAssertions.assertThat(Result.unprocessable(TestValue.TEST_MESSAGE))
-                    .isValidUnsuccessfulResult();
+                    .isValidUnsuccessfulResult()
+                    .containsMessage(TestValue.TEST_MESSAGE);
   }
 
   @Test
@@ -63,7 +66,8 @@ class ResultTests {
 
   @Test
   void unauthorized_shouldReturnunauthorizedResult() {
-    ResultAssertions.assertThat(Result.unauthorized()).isValidUnsuccessfulResult();
+    ResultAssertions.assertThat(Result.unauthorized()).isValidUnsuccessfulResult()
+                    .isEmpty();
   }
 
   @Test
@@ -73,35 +77,53 @@ class ResultTests {
                     .containsMessage(TestValue.TEST_MESSAGE);
   }
 
-
   @Test
   void errorOccurred_shouldReturnSuccessResult() {
     ResultAssertions.assertThat(Result.errorOccurred(TestValue.TEST_MESSAGE))
-                    .isValidUnsuccessfulResult();
+                    .isValidUnsuccessfulResult()
+                    .containsMessage(TestValue.TEST_MESSAGE);
+  }
+
+  @Test
+  void fromOptional_emptyOptional_shouldReturnEmptyResourceResult() {
+    var result = Result.fromOptional(Optional.empty());
+    ResultAssertions.assertThat(result).isValidSuccessResult()
+                    .isEmpty();
+  }
+
+  @Test
+  void fromOptional_filledOptional_shouldReturnSuccessResult() {
+    var result = Result.fromOptional(Optional.of(TEST_CONTENT));
+    ResultAssertions.assertThat(result).isValidSuccessResult()
+                    .hasContent();
   }
 
   @Test
   void fromDelegate_SuccessfulRunnable_shouldReturnSuccessResult() {
     var result = Result.fromDelegate(() -> System.out.println(TEST_CONTENT));
-    ResultAssertions.assertThat(result).isValidSuccessResult();
+    ResultAssertions.assertThat(result).isValidSuccessResult()
+                    .hasContent();
   }
 
   @Test
   void fromDelegate_ExceptionalRunnable_shouldReturnSuccessResult() {
     var result = Result.fromDelegate(() -> System.out.println(TEST_CONTENT));
-    ResultAssertions.assertThat(result).isValidSuccessResult();
+    ResultAssertions.assertThat(result).isValidSuccessResult()
+                    .hasContent();
   }
 
   @Test
   void fromDelegate_SuccessfulPredicate_shouldReturnSuccessResult() {
     var result = Result.fromDelegate(x -> true, null);
-    ResultAssertions.assertThat(result).isValidSuccessResult();
+    ResultAssertions.assertThat(result).isValidSuccessResult()
+                    .isEmpty();
   }
 
   @Test
   void fromDelegate_UnsuccessfulPredicate_shouldReturnUnprocessableResult() {
     var result = Result.fromDelegate(x -> false, null);
-    ResultAssertions.assertThat(result).isValidUnsuccessfulResult();
+    ResultAssertions.assertThat(result).isValidUnsuccessfulResult()
+                    .isEmpty();
   }
 
   @Test
@@ -111,18 +133,14 @@ class ResultTests {
     var message = exception.getMessage();
     Mockito.doThrow(exception).when(throwingPredicate).test(Mockito.any());
     var result = Result.fromDelegate(throwingPredicate, null);
-    ResultAssertions.assertThat(result)
-                    .isValidUnsuccessfulResult()
-                    .containsMessage(message);
+    ResultAssertions.assertThat(result).isValidUnsuccessfulResult().containsMessage(message);
   }
 
   @Test
   void fromDelegate_SuccessfulSupplier_shouldReturnSuccessResult() {
     Supplier<String> supplier = () -> TEST_CONTENT;
     var result = Result.fromDelegate(supplier);
-    ResultAssertions.assertThat(result)
-                    .isValidSuccessResult()
-                    .containsContent(TEST_CONTENT);
+    ResultAssertions.assertThat(result).isValidSuccessResult().containsContent(TEST_CONTENT);
   }
 
   @Test
@@ -132,11 +150,9 @@ class ResultTests {
     var message = exception.getMessage();
     Mockito.doThrow(exception).when(throwingRunnable).get();
     var result = Result.fromDelegate(throwingRunnable);
-    ResultAssertions.assertThat(result)
-                    .isValidUnsuccessfulResult()
-                    .containsMessage(message);
+    ResultAssertions.assertThat(result).isValidUnsuccessfulResult().containsMessage(message);
   }
-    
+
   @Test
   void transform_shouldReturnEmptyResultWithCorrectStatus() {
     var result = Result.success("test");
@@ -155,7 +171,7 @@ class ResultTests {
     Assertions.assertThat(actual.isSuccessfulWithContents()).isTrue();
     Assertions.assertThat(actual.getContents()).isEqualTo(newContent);
   }
-  
+
   @Test
   void isEmpty_emptyResult_shouldReturnTrue() {
     var result = Result.emptyResource();
