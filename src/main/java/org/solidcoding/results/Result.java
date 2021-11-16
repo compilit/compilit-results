@@ -167,6 +167,36 @@ public interface Result<T> {
     }
   }
 
+    /**
+   * Transforms an existing Result into another one with a different content type.
+   *
+   * @param result the existing Result.
+   * @param <T> the content type of the new Result.
+   * @return Result<T>
+   */
+  static <T> Result<T> transform(Result<?> result) {
+    var resultStatus = result.getResultStatus();
+    var resultMessage = result.getMessage();
+    return Result.<T>of(resultStatus, resultMessage);
+  }
+
+  private static <T> Result<T> of(ResultStatus resultStatus, String message) {
+    switch (resultStatus) {
+      case SUCCESS:
+        return Result.success();
+      case UNAUTHORIZED:
+        return Result.unauthorized(message);
+      case NOT_FOUND:
+        return Result.notFound(message);
+      case EMPTY_RESOURCE:
+        return Result.emptyResource(message);
+      case ERROR_OCCURRED:
+        return Result.errorOccurred(message);
+      default:
+        return Result.unprocessable(message);
+    }
+  }
+  
   /**
    * @return the ResultStatus of the result.
    */
