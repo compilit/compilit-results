@@ -38,7 +38,11 @@ if (something.doesNotMeetOurExpectations()) {
 
 return Result.fromDelegate(() -> doSomethingDangerous());
 
-return Result.<SomeOtherType>transform(Result.<OneType>errorOccured()); // return the error result, but without content.
+return Result.<SomeOtherType>transform(Result.<OneType>errorOccured()); // Returns the error result, but without content.
 
-return Result.transform(Result.errorOccured(), "some other content"); // return the error result, but with different content.
+return Result.transform(Result.errorOccured(), "some other content"); // Returns the error result, but with different content.
+
+return Result.combine(result1).with(result2).with(result3).merge(); // Returns a Result<List<T>> containing all contents. But only if all results were successful.
+
+return Result.combine(result1).with(result2).with(result3).sum(); // Returns a SuccessResult. But only if all results were successful.
 ```
