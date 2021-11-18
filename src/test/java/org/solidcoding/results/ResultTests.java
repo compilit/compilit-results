@@ -283,4 +283,61 @@ class ResultTests {
     ResultAssertions.assertThat(actual).isValidSuccessResult()
                     .containsContent(newContent);
   }
+
+  @Test
+  void merge_shouldCombineMultipleResults() {
+    var contentsOne = TEST_CONTENT + 1;
+    var contentsTwo = TEST_CONTENT + 2;
+    var contentsThree = TEST_CONTENT + 3;
+    var resultOne = Result.success(contentsOne);
+    var resultTwo = Result.success(contentsTwo);
+    var resultThree = Result.success(contentsThree);
+    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).merge();
+
+    ResultAssertions.assertThat(actual).isValidSuccessResult()
+                    .hasContent();
+    Assertions.assertThat(actual.getContents().size()).isEqualTo(3);
+  }
+
+  @Test
+  void merge_errorOccurred_shouldCombineMultipleResults() {
+    var contentsOne = TEST_CONTENT + 1;
+    var contentsTwo = TEST_CONTENT + 2;
+    var contentsThree = TEST_CONTENT + 3;
+    var resultOne = Result.<String>errorOccurred(contentsOne);
+    var resultTwo = Result.success(contentsTwo);
+    var resultThree = Result.success(contentsThree);
+    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).merge();
+
+    ResultAssertions.assertThat(actual).isValidUnsuccessfulResult()
+                    .isEmpty();
+  }
+
+  @Test
+  void sum_shouldCombineMultipleResults() {
+    var contentsOne = TEST_CONTENT + 1;
+    var contentsTwo = TEST_CONTENT + 2;
+    var contentsThree = TEST_CONTENT + 3;
+    var resultOne = Result.success(contentsOne);
+    var resultTwo = Result.success(contentsTwo);
+    var resultThree = Result.success(contentsThree);
+    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).sum();
+
+    ResultAssertions.assertThat(actual).isValidSuccessResult()
+                    .isEmpty();
+  }
+
+  @Test
+  void sum_errorOccurred_shouldCombineMultipleResults() {
+    var contentsOne = TEST_CONTENT + 1;
+    var contentsTwo = TEST_CONTENT + 2;
+    var contentsThree = TEST_CONTENT + 3;
+    var resultOne = Result.<String>errorOccurred(contentsOne);
+    var resultTwo = Result.success(contentsTwo);
+    var resultThree = Result.success(contentsThree);
+    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).sum();
+
+    ResultAssertions.assertThat(actual).isValidUnsuccessfulResult()
+                    .isEmpty();
+  }
 }

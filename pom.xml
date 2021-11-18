@@ -2,7 +2,17 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.solidcoding</groupId>
   <artifactId>solidcoding-results</artifactId>
+  <version>1.0.0</version>
+
+  <name>Solidcoding results</name>
+  <description>A small package that enables you to encapsulate and propagate processing/validation
+    results with their corresponding message and status.
+  </description>
+  <url>https://github.com/harveytherabbit/solidcoding-results</url>
 
   <build>
     <plugins>
@@ -119,16 +129,12 @@
     </snapshotRepository>
   </distributionManagement>
 
-  <groupId>org.solidcoding</groupId>
-
   <licenses>
     <license>
       <name>MIT</name>
       <url>https://github.com/harveytherabbit/solidcoding-parent/blob/main/LICENSE</url>
     </license>
   </licenses>
-
-  <modelVersion>4.0.0</modelVersion>
 
   <profiles>
     <profile>
@@ -180,10 +186,10 @@
   </properties>
 
   <scm>
-    <connection>scm:git@github.com:harveytherabbit/solidcoding-validation.git</connection>
-    <developerConnection>scm:git@github.com:harveytherabbit/solidcoding-validation.git
+    <connection>scm:git@github.com:harveytherabbit/solidcoding-results.git</connection>
+    <developerConnection>scm:git@github.com:harveytherabbit/solidcoding-results.git
     </developerConnection>
-    <url>https://github.com/harveytherabbit/solidcoding-validation</url>
+    <url>https://github.com/harveytherabbit/solidcoding-results</url>
   </scm>
-  <version>1.0.0</version>
+
 </project>

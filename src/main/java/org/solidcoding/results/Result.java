@@ -232,6 +232,10 @@ public interface Result<T> {
     }
   }
 
+  static <T> ResultCombiner<T> combine(Result<T> result) {
+    return new ResultToListCombiner<>(result);
+  }
+
   /**
    * @return the ResultStatus of the result.
    */
