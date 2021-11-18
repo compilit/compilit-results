@@ -33,6 +33,7 @@ public interface Result<T> {
   /**
    * A generic result for when the client asks for a non-existent value in an existing resource.
    *
+   * @param <T> the content type.
    * @return an empty resource Result without a message.
    */
   static <T> Result<T> emptyResource() {
@@ -42,6 +43,8 @@ public interface Result<T> {
   /**
    * A generic result for when the client asks for a non-existent value in an existing resource.
    *
+   * @param <T>     the content type.
+   * @param message the message you wish to propagate.
    * @return an empty resource Result with a message.
    */
   static <T> Result<T> emptyResource(String message) {
@@ -51,6 +54,7 @@ public interface Result<T> {
   /**
    * A generic result for when the client asks for a non-existent resource.
    *
+   * @param <T> the content type.
    * @return a not found Result without a message.
    */
   static <T> Result<T> notFound() {
@@ -60,6 +64,8 @@ public interface Result<T> {
   /**
    * A generic result for when the client asks for a non-existent resource.
    *
+   * @param <T>     the content type.
+   * @param message the message you wish to propagate.
    * @return a not found Result with a message.
    */
   static <T> Result<T> notFound(String message) {
@@ -79,7 +85,7 @@ public interface Result<T> {
   /**
    * A generic failure result. Can be used for pretty much any failed process or validation.
    *
-   * @param message the error message.
+   * @param message the message you wish to propagate.
    * @param <T>     the type of the contents.
    * @return an unprocessable Result with a message.
    */
@@ -90,6 +96,7 @@ public interface Result<T> {
   /**
    * A generic result for any encountered authentication/authorization issue.
    *
+   * @param <T> the content type.
    * @return an empty unauthorized Result without a message.
    */
   static <T> Result<T> unauthorized() {
@@ -99,6 +106,8 @@ public interface Result<T> {
   /**
    * A generic result for any encountered authentication/authorization issue.
    *
+   * @param message the message you wish to propagate.
+   * @param <T>     the content type.
    * @return an empty unauthorized Result with a message.
    */
   static <T> Result<T> unauthorized(String message) {
@@ -108,6 +117,7 @@ public interface Result<T> {
   /**
    * A generic result for any encountered exceptions.
    *
+   * @param <T>     the content type.
    * @param message the error message.
    * @return an error occurred Result with a message.
    */
@@ -119,7 +129,9 @@ public interface Result<T> {
    * A generic result that encapsulates a runnable process. Returns a Success result if the runnable
    * does not throw an Exception.
    *
-   * @return Result
+   * @param runnable the actual process.
+   * @param <T>      the content type.
+   * @return SuccessResult or ErrorOccurredResult with the exception message.
    */
   static <T> Result<T> fromDelegate(Runnable runnable) {
     try {
@@ -137,7 +149,7 @@ public interface Result<T> {
    *
    * @param supplier the content-supplying function.
    * @param <T>      the type of the contents.
-   * @return Result.
+   * @return SuccessResult or ErrorOccurredResult with the exception message.
    */
   static <T> Result<T> fromDelegate(Supplier<T> supplier) {
     try {
@@ -152,12 +164,12 @@ public interface Result<T> {
    * A generic result that encapsulates a predicate. Returns a Success result with the value if the
    * predicate resolves to true. And an Unprocessable result if it resolves to false. If the
    * Predicate throws an Exception, it returns an ErrorOccurredResult with the exception message
-   * added to the Result
+   * added to the Result.
    *
    * @param predicate the predicate which to apply to the value.
    * @param value     the value which needs to be tested by the predicate.
    * @param <T>       the type of the contents.
-   * @return Result.
+   * @return SuccessResult, UnprocessableResult or ErrorOccurredResult with the exception message.
    */
   static <T> Result<T> fromDelegate(Predicate<T> predicate, T value) {
     try {
@@ -177,7 +189,7 @@ public interface Result<T> {
    *
    * @param result the existing Result.
    * @param <T>    the content type of the new Result.
-   * @return Result<T>
+   * @return Result.
    */
   static <T> Result<T> transform(Result<?> result) {
     var resultStatus = result.getResultStatus();
@@ -189,9 +201,10 @@ public interface Result<T> {
    * Transforms an existing Result into another one with a different content while retaining the
    * status. Works as an adapter. Example: pass an Integer Result, but return a String Result.
    *
-   * @param result the existing Result.
-   * @param <T>    the content type of the new Result.
-   * @return Result<T>
+   * @param content the content you with to propagate.
+   * @param result  the existing Result.
+   * @param <T>     the content type of the new result.
+   * @return Result.
    */
   static <T> Result<T> transform(Result<?> result, T content) {
     var resultStatus = result.getResultStatus();
@@ -205,7 +218,7 @@ public interface Result<T> {
    *
    * @param optional the optional value of the result to return.
    * @param <T>      the content type of the new Result.
-   * @return Result<T>
+   * @return SuccessResult or EmptyResourceResult.
    */
   static <T> Result<T> fromOptional(Optional<T> optional) {
     return optional.map(Result::success).orElseGet(Result::emptyResource);
@@ -232,6 +245,11 @@ public interface Result<T> {
     }
   }
 
+  /**
+   * @param <T>    the content type of the result.
+   * @param result the result you wish to combine/merge/sum with others.
+   * @return ResultCombiner to chain the next result.
+   */
   static <T> ResultCombiner<T> combine(Result<T> result) {
     return new ResultToListCombiner<>(result);
   }

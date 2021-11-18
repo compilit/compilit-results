@@ -3,7 +3,6 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>org.solidcoding</groupId>
   <artifactId>solidcoding-results</artifactId>
   <version>1.0.0</version>
@@ -110,6 +109,7 @@
       <version>${junit.jupiter.version}</version>
     </dependency>
   </dependencies>
+
   <developers>
     <developer>
       <email>harvey.rabbit@protonmail.com</email>
@@ -117,7 +117,6 @@
       <name>Bastiën Bonsel</name>
     </developer>
   </developers>
-
   <distributionManagement>
     <repository>
       <id>ossrh</id>

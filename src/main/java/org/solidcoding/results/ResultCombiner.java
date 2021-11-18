@@ -6,7 +6,7 @@ public interface ResultCombiner<T> {
 
   /**
    * @param result the next result you wish to combine with the previous.
-   * @return ResultCombiner<T> to chain the next result.
+   * @return ResultCombiner to chain the next result.
    */
   ResultCombiner<T> with(Result<T> result);
 
@@ -14,7 +14,7 @@ public interface ResultCombiner<T> {
    * Get a list of all contents of the passed results if all results were successful. Returns a
    * SuccessResult if, and only if all other results were successful.
    *
-   * @return Result<List < T>>
+   * @return Result containing a List of T.
    */
   Result<List<T>> merge();
 
@@ -22,7 +22,7 @@ public interface ResultCombiner<T> {
    * Get the combined result without contents of all passed results. Returns a SuccessResult if, and
    * only if all other results were successful.
    *
-   * @return Result<List < T>>
+   * @return Result of all others combined.
    */
   Result<T> sum();
 
