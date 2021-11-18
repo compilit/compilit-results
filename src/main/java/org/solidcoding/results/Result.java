@@ -24,9 +24,9 @@ public interface Result<T> {
    * @return a success Result with contents.
    */
   static <T> Result<T> success(T contents) {
-      if (contents == null) {
-          return new EmptyResourceResult<>();
-      }
+    if (contents == null) {
+      return new EmptyResourceResult<>();
+    }
     return new SuccessResult<>(contents);
   }
 
@@ -172,7 +172,8 @@ public interface Result<T> {
   }
 
   /**
-   * Transforms an existing Result into another one while retaining the status.
+   * Transforms an existing Result into another one while retaining the status. Works as an adapter.
+   * Example: pass an Integer Result, but return a String Result.
    *
    * @param result the existing Result.
    * @param <T>    the content type of the new Result.
@@ -185,8 +186,8 @@ public interface Result<T> {
   }
 
   /**
-   * Transforms an existing Result into another one with a different content type while retaining
-   * the status.
+   * Transforms an existing Result into another one with a different content while retaining the
+   * status. Works as an adapter. Example: pass an Integer Result, but return a String Result.
    *
    * @param result the existing Result.
    * @param <T>    the content type of the new Result.

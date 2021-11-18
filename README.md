@@ -1,6 +1,10 @@
 # solidcoding-results
 
-Simple library to encapsulate and propagate processing results
+Simple library to encapsulate and propagate processing results.
+
+Often when something deep in our code goes wrong, we have only our exceptions to rely on propagating
+error messages. But what if what happens isn't an actual "exception"? Exceptions should be just
+that. Exceptional. For everything else a simple Result will suffice.
 
 # installation
 
@@ -33,4 +37,8 @@ if (something.doesNotMeetOurExpectations()) {
 }
 
 return Result.fromDelegate(() -> doSomethingDangerous());
+
+return Result.<SomeOtherType>transform(Result.<OneType>errorOccured()); // return the error result, but without content.
+
+return Result.transform(Result.errorOccured(), "some other content"); // return the error result, but with different content.
 ```

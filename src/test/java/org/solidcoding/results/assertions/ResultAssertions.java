@@ -30,7 +30,7 @@ public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Res
 
   public ResultAssertions<T> isEmpty() {
     if (!actual.isEmpty()) {
-      failWithMessage("Expected Result to have no content but was it did");
+      failWithMessage("Expected Result to have no content but it did");
     }
     return this;
   }

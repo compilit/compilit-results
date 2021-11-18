@@ -266,4 +266,21 @@ class ResultTests {
     var successResult = Result.success();
     Assertions.assertThat(successResult.getMessage()).isEqualTo("Nothing to report");
   }
+
+  @Test
+  void transform_withoutContent_shouldReturnSameStatusWithoutContent() {
+    var result = Result.success(TEST_CONTENT);
+    var actual = Result.<Integer>transform(result);
+    ResultAssertions.assertThat(actual).isEmpty()
+                    .isValidSuccessResult();
+  }
+
+  @Test
+  void transform_withContent_shouldReturnSameStatusWithDifferentContent() {
+    var newContent = 1234;
+    var result = Result.success(TEST_CONTENT);
+    var actual = Result.transform(result, newContent);
+    ResultAssertions.assertThat(actual).isValidSuccessResult()
+                    .containsContent(newContent);
+  }
 }
