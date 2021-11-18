@@ -40,6 +40,11 @@ abstract class AbstractResult<T> implements Result<T> {
   }
 
   @Override
+  public boolean isSuccessfulWithContents() {
+    return isSuccessful() && hasContents();
+  }
+
+  @Override
   public boolean isUnsuccessful() {
     return !isSuccessful();
   }
@@ -50,13 +55,23 @@ abstract class AbstractResult<T> implements Result<T> {
   }
 
   @Override
-  public Optional<T> getContents() {
+  public T getContents() {
+    return contents;
+  }
+
+  @Override
+  public Optional<T> getOptionalContents() {
     return Optional.ofNullable(contents);
   }
 
   @Override
   public boolean hasContents() {
-    return getContents().isPresent();
+    return getOptionalContents().isPresent();
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return !hasContents();
   }
 
   @Override
