@@ -1,6 +1,6 @@
 # solidcoding-results
 
-Simple library to encapsulate and propagate processing results.
+Simple library to encapsulate and propagate processing results. Inspired by Results in the Rust programming language. (https://doc.rust-lang.org/std/result/enum.Result.html)
 
 Often when something deep in our code goes wrong, we have only our exceptions to rely on propagating
 error messages. But what if what happens isn't an actual "exception"? Exceptions should be just
