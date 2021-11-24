@@ -166,22 +166,29 @@ class ResultTests {
   }
 
   @Test
-  void transform_shouldReturnEmptyResultWithCorrectStatus() {
+  void fromResult_shouldReturnEmptyResultWithCorrectStatus() {
     var result = Result.success("test");
     Assertions.assertThat(result.isEmpty()).isFalse();
-    var actual = Result.<Integer>transform(result);
+    var actual = Result.<Integer>fromResult(result);
     Assertions.assertThat(actual.isEmpty()).isTrue();
     Assertions.assertThat(actual.isSuccessful()).isTrue();
   }
 
   @Test
-  void transform_withContent_shouldReturnGivenContent() {
+  void fromResult_withContent_shouldReturnGivenContent() {
     var result = Result.success("test");
     Assertions.assertThat(result.isEmpty()).isFalse();
     var newContent = new Object();
-    var actual = Result.transform(result, newContent);
+    var actual = Result.fromResult(result, newContent);
     Assertions.assertThat(actual.isSuccessfulWithContents()).isTrue();
     Assertions.assertThat(actual.getContents()).isEqualTo(newContent);
+  }
+
+  @Test
+  void fromResult_withFormattedMessage_shouldReturnFormattedMessage() {
+    var expected = String.format("test %s", "test");
+    var result = Result.errorOccurred("test %s", "test");
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
   }
 
   @Test
@@ -268,18 +275,32 @@ class ResultTests {
   }
 
   @Test
-  void transform_withoutContent_shouldReturnSameStatusWithoutContent() {
+  void getMessage_combined_shouldReturnMessagesCombined() {
+    var errorMessage1 = "I am error1";
+    var errorMessage2 = "I am error2";
+    var errorResult1 = Result.errorOccurred(errorMessage1);
+    var errorResult2 = Result.errorOccurred(errorMessage2);
+    var actual = Result.combine(errorResult1).with(errorResult2).merge();
+    Assertions.assertThat(actual.getMessage()).isNotEqualTo(errorMessage1);
+    Assertions.assertThat(actual.getMessage()).isNotEqualTo(errorMessage2);
+    Assertions.assertThat(actual.getMessage()).contains(errorMessage1);
+    Assertions.assertThat(actual.getMessage()).contains(errorMessage2);
+    System.out.println(actual.getMessage());
+  }
+
+  @Test
+  void fromResult_withoutContent_shouldReturnSameStatusWithoutContent() {
     var result = Result.success(TEST_CONTENT);
-    var actual = Result.<Integer>transform(result);
+    var actual = Result.<Integer>fromResult(result);
     ResultAssertions.assertThat(actual).isEmpty()
                     .isValidSuccessResult();
   }
 
   @Test
-  void transform_withContent_shouldReturnSameStatusWithDifferentContent() {
+  void fromResult_withContent_shouldReturnSameStatusWithDifferentContent() {
     var newContent = 1234;
     var result = Result.success(TEST_CONTENT);
-    var actual = Result.transform(result, newContent);
+    var actual = Result.fromResult(result, newContent);
     ResultAssertions.assertThat(actual).isValidSuccessResult()
                     .containsContent(newContent);
   }
@@ -339,5 +360,13 @@ class ResultTests {
 
     ResultAssertions.assertThat(actual).isValidUnsuccessfulResult()
                     .isEmpty();
+  }
+
+  @Test
+  void getMessage_withFormattedMessage_shouldReturnFormattedMessage() {
+    var expected = String.format("I am error %s %s %s %s", "test1", "test2", "someValue", "test3");
+    var actual = Result.errorOccurred("I am error %s %s %s %s", "test1", "test2", "someValue", "test3");
+    Assertions.assertThat(actual.getMessage()).isEqualTo(expected);
+    System.out.println(actual.getMessage());
   }
 }

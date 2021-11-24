@@ -45,9 +45,14 @@ public interface Result<T> {
    *
    * @param <T>     the content type.
    * @param message the message you wish to propagate.
+   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
    * @return an empty resource Result with a message.
    */
-  static <T> Result<T> emptyResource(String message) {
+  static <T> Result<T> emptyResource(String message, String... formatArguments) {
+    if (formatArguments != null) {
+      var actualMessage = String.format(message, (Object[]) formatArguments);
+      return new ErrorOccurredResult<>(actualMessage);
+    }
     return new EmptyResourceResult<>(message);
   }
 
@@ -66,9 +71,14 @@ public interface Result<T> {
    *
    * @param <T>     the content type.
    * @param message the message you wish to propagate.
+   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
    * @return a not found Result with a message.
    */
-  static <T> Result<T> notFound(String message) {
+  static <T> Result<T> notFound(String message, String... formatArguments) {
+    if (formatArguments != null) {
+      var actualMessage = String.format(message, (Object[]) formatArguments);
+      return new ErrorOccurredResult<>(actualMessage);
+    }
     return new NotFoundResult<>(message);
   }
 
@@ -86,10 +96,15 @@ public interface Result<T> {
    * A generic failure result. Can be used for pretty much any failed process or validation.
    *
    * @param message the message you wish to propagate.
+   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
    * @param <T>     the type of the contents.
    * @return an unprocessable Result with a message.
    */
-  static <T> Result<T> unprocessable(String message) {
+  static <T> Result<T> unprocessable(String message, String... formatArguments) {
+    if (formatArguments != null) {
+      var actualMessage = String.format(message, (Object[]) formatArguments);
+      return new ErrorOccurredResult<>(actualMessage);
+    }
     return new UnprocessableResult<>(message);
   }
 
@@ -107,10 +122,15 @@ public interface Result<T> {
    * A generic result for any encountered authentication/authorization issue.
    *
    * @param message the message you wish to propagate.
+   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
    * @param <T>     the content type.
    * @return an empty unauthorized Result with a message.
    */
-  static <T> Result<T> unauthorized(String message) {
+  static <T> Result<T> unauthorized(String message, String... formatArguments) {
+    if (formatArguments != null) {
+      var actualMessage = String.format(message, (Object[]) formatArguments);
+      return new UnauthorizedResult<>(actualMessage);
+    }
     return new UnauthorizedResult<>(message);
   }
 
@@ -119,9 +139,14 @@ public interface Result<T> {
    *
    * @param <T>     the content type.
    * @param message the error message.
+   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
    * @return an error occurred Result with a message.
    */
-  static <T> Result<T> errorOccurred(String message) {
+  static <T> Result<T> errorOccurred(String message, String... formatArguments) {
+    if (formatArguments != null) {
+      var actualMessage = String.format(message, (Object[]) formatArguments);
+      return new ErrorOccurredResult<>(actualMessage);
+    }
     return new ErrorOccurredResult<>(message);
   }
 
@@ -191,7 +216,7 @@ public interface Result<T> {
    * @param <T>    the content type of the new Result.
    * @return Result.
    */
-  static <T> Result<T> transform(Result<?> result) {
+  static <T> Result<T> fromResult(Result<?> result) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
     return Result.of(resultStatus, resultMessage);
@@ -206,10 +231,29 @@ public interface Result<T> {
    * @param <T>     the content type of the new result.
    * @return Result.
    */
-  static <T> Result<T> transform(Result<?> result, T content) {
+  static <T> Result<T> fromResult(Result<?> result, T content) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
     return Result.of(resultStatus, resultMessage, content);
+  }
+
+  /**
+   * Transforms an existing Result into another one with a different content while retaining the
+   * status. Works as an adapter. Example: pass an Integer Result, but return a String Result.
+   *
+   * @param message the message you with to add.
+   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
+   * @param result  the existing Result.
+   * @param <T>     the content type of the new result.
+   * @return Result.
+   */
+  static <T> Result<T> fromResult(Result<?> result, String message, String... formatArguments) {
+    var resultStatus = result.getResultStatus();
+    if (formatArguments != null) {
+      var actualMessage = String.format(message, (Object[]) formatArguments);
+      return Result.of(resultStatus, actualMessage);
+    }
+    return Result.of(resultStatus, message);
   }
 
   /**
@@ -222,27 +266,6 @@ public interface Result<T> {
    */
   static <T> Result<T> fromOptional(Optional<T> optional) {
     return optional.map(Result::success).orElseGet(Result::emptyResource);
-  }
-
-  private static <T> Result<T> of(ResultStatus resultStatus, String message) {
-    return of(resultStatus, message, null);
-  }
-
-  private static <T> Result<T> of(ResultStatus resultStatus, String message, T content) {
-    switch (resultStatus) {
-      case SUCCESS:
-        return Result.success(content);
-      case UNAUTHORIZED:
-        return Result.unauthorized(message);
-      case NOT_FOUND:
-        return Result.notFound(message);
-      case EMPTY_RESOURCE:
-        return Result.emptyResource(message);
-      case ERROR_OCCURRED:
-        return Result.errorOccurred(message);
-      default:
-        return Result.unprocessable(message);
-    }
   }
 
   /**
@@ -298,4 +321,25 @@ public interface Result<T> {
    * @return the message of the result if present.
    */
   String getMessage();
+
+  private static <T> Result<T> of(ResultStatus resultStatus, String message) {
+    return of(resultStatus, message, null);
+  }
+
+  private static <T> Result<T> of(ResultStatus resultStatus, String message, T content) {
+    switch (resultStatus) {
+      case SUCCESS:
+        return Result.success(content);
+      case UNAUTHORIZED:
+        return Result.unauthorized(message);
+      case NOT_FOUND:
+        return Result.notFound(message);
+      case EMPTY_RESOURCE:
+        return Result.emptyResource(message);
+      case ERROR_OCCURRED:
+        return Result.errorOccurred(message);
+      default:
+        return Result.unprocessable(message);
+    }
+  }
 }
