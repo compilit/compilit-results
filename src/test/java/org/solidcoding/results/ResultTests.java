@@ -185,10 +185,43 @@ class ResultTests {
   }
 
   @Test
-  void fromResult_withFormattedMessage_shouldReturnFormattedMessage() {
+  void errorOccurred_withFormattedMessage_shouldReturnFormattedMessage() {
     var expected = String.format("test %s", "test");
     var result = Result.errorOccurred("test %s", "test");
     Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.ERROR_OCCURRED);
+  }
+
+  @Test
+  void notFound_withFormattedMessage_shouldReturnFormattedMessage() {
+    var expected = String.format("test %s", "test");
+    var result = Result.notFound("test %s", "test");
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.NOT_FOUND);
+  }
+
+  @Test
+  void unprocessable_withFormattedMessage_shouldReturnFormattedMessage() {
+    var expected = String.format("test %s", "test");
+    var result = Result.unprocessable("test %s", "test");
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.UNPROCESSABLE);
+  }
+
+  @Test
+  void unauthorized_withFormattedMessage_shouldReturnFormattedMessage() {
+    var expected = String.format("test %s", "test");
+    var result = Result.unauthorized("test %s", "test");
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.UNAUTHORIZED);
+  }
+
+  @Test
+  void emptyResource_withFormattedMessage_shouldReturnFormattedMessage() {
+    var expected = String.format("test %s", "test");
+    var result = Result.emptyResource("test %s", "test");
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
   }
 
   @Test

@@ -21,7 +21,7 @@ public interface Result<T> {
    *
    * @param contents the contents of the result.
    * @param <T>      the type of the contents.
-   * @return a success Result with contents.
+   * @return a success Result with contents. Or an empty resource Result if the content is null.
    */
   static <T> Result<T> success(T contents) {
     if (contents == null) {
@@ -51,7 +51,7 @@ public interface Result<T> {
   static <T> Result<T> emptyResource(String message, String... formatArguments) {
     if (formatArguments != null) {
       var actualMessage = String.format(message, (Object[]) formatArguments);
-      return new ErrorOccurredResult<>(actualMessage);
+      return new EmptyResourceResult<>(actualMessage);
     }
     return new EmptyResourceResult<>(message);
   }
@@ -77,7 +77,7 @@ public interface Result<T> {
   static <T> Result<T> notFound(String message, String... formatArguments) {
     if (formatArguments != null) {
       var actualMessage = String.format(message, (Object[]) formatArguments);
-      return new ErrorOccurredResult<>(actualMessage);
+      return new NotFoundResult<>(actualMessage);
     }
     return new NotFoundResult<>(message);
   }
@@ -103,7 +103,7 @@ public interface Result<T> {
   static <T> Result<T> unprocessable(String message, String... formatArguments) {
     if (formatArguments != null) {
       var actualMessage = String.format(message, (Object[]) formatArguments);
-      return new ErrorOccurredResult<>(actualMessage);
+      return new UnprocessableResult<>(actualMessage);
     }
     return new UnprocessableResult<>(message);
   }

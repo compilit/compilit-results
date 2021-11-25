@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.solidcoding</groupId>
   <artifactId>solidcoding-results</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
 
   <name>Solidcoding results</name>
   <description>A small package that enables you to encapsulate and propagate processing/validation
