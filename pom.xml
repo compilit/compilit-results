@@ -3,7 +3,13 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.solidcoding</groupId>
+
+  <parent>
+    <artifactId>solidcoding-parent</artifactId>
+    <groupId>org.solidcoding</groupId>
+    <version>1.0.2</version>
+  </parent>
+
   <artifactId>solidcoding-results</artifactId>
   <version>1.1.1</version>
 
@@ -11,90 +17,8 @@
   <description>A small package that enables you to encapsulate and propagate processing/validation
     results with their corresponding message and status.
   </description>
-  <url>https://github.com/harveytherabbit/solidcoding-results</url>
+  <url>https://github.com/solidcoding-org/solidcoding-results</url>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-            <id>default-deploy</id>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>${maven-deploy-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-          <localCheckout>true</localCheckout>
-          <mavenExecutorId>forked-path</mavenExecutorId>
-          <pushChanges>false</pushChanges>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <artifactId>maven-scm-provider-gitexe</artifactId>
-            <groupId>org.apache.maven.scm</groupId>
-            <version>${maven-scm-provider-gitexe.version}</version>
-          </dependency>
-        </dependencies>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>${maven-release-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <configuration>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-          <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-          <serverId>ossrh</serverId>
-        </configuration>
-        <extensions>true</extensions>
-        <groupId>org.sonatype.plugins</groupId>
-        <version>${nexus-staging-maven-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <id>attach-sources</id>
-          </execution>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <id>attach-javadoc</id>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>${maven-source-plugin.version}</version>
-      </plugin>
-      <plugin>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <id>attach-javadoc</id>
-          </execution>
-        </executions>
-        <groupId>org.apache.maven.plugins</groupId>
-        <version>${maven-javadoc-plugin.version}</version>
-      </plugin>
-    </plugins>
-  </build>
   <dependencies>
     <dependency>
       <artifactId>assertj-core</artifactId>
@@ -109,86 +33,5 @@
       <version>${junit.jupiter.version}</version>
     </dependency>
   </dependencies>
-
-  <developers>
-    <developer>
-      <email>harvey.rabbit@protonmail.com</email>
-      <id>HarveyTheRabbit</id>
-      <name>Bastiën Bonsel</name>
-    </developer>
-  </developers>
-  <distributionManagement>
-    <repository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
-  <licenses>
-    <license>
-      <name>MIT</name>
-      <url>https://github.com/harveytherabbit/solidcoding-parent/blob/main/LICENSE</url>
-    </license>
-  </licenses>
-
-  <profiles>
-    <profile>
-      <activation>
-        <property>
-          <name>performRelease</name>
-          <value>true</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <configuration>
-                  <keyname>${gpg.keyname}</keyname>
-                  <passphraseServerId>${gpg.keyname}</passphraseServerId>
-                </configuration>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-              </execution>
-            </executions>
-            <groupId>org.apache.maven.plugins</groupId>
-            <version>${maven-gpg-plugin.version}</version>
-          </plugin>
-        </plugins>
-      </build>
-      <id>release-sign-artifacts</id>
-    </profile>
-  </profiles>
-
-  <properties>
-    <assertj.version>3.21.0</assertj.version>
-    <jdk.version>11</jdk.version>
-    <junit.jupiter.version>5.8.1</junit.jupiter.version>
-    <maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
-    <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-    <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
-    <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-    <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
-    <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-    <maven.compiler.source>${jdk.version}</maven.compiler.source>
-    <maven.compiler.target>${jdk.version}</maven.compiler.target>
-    <nexus-staging-maven-plugin.version>1.6.7</nexus-staging-maven-plugin.version>
-  </properties>
-
-  <scm>
-    <connection>scm:git@github.com:harveytherabbit/solidcoding-results.git</connection>
-    <developerConnection>scm:git@github.com:harveytherabbit/solidcoding-results.git
-    </developerConnection>
-    <url>https://github.com/harveytherabbit/solidcoding-results</url>
-  </scm>
 
 </project>
