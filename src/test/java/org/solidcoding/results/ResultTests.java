@@ -290,7 +290,7 @@ class ResultTests {
   @Test
   void getOptionalContents_shouldReturnContentsAsOptional() {
     var result = Result.success(TEST_CONTENT);
-    Assertions.assertThat(result.getOptionalContents().get()).isEqualTo(TEST_CONTENT);
+    Assertions.assertThat(result.getOptionalContents()).contains(TEST_CONTENT);
   }
 
   @Test
