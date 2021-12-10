@@ -1,10 +1,11 @@
 # solidcoding-results
 
-Simple library to encapsulate and propagate processing results. Inspired by Results in the Rust programming language. (https://doc.rust-lang.org/std/result/enum.Result.html)
+Simple library to encapsulate and propagate processing results. Inspired by Results in the Rust programming
+language. (https://doc.rust-lang.org/std/result/enum.Result.html)
 
-Often when something deep in our code goes wrong, we have only our exceptions to rely on propagating
-error messages. But what if what happens isn't an actual "exception"? Exceptions should be just
-that. Exceptional. For everything else a simple Result will suffice.
+Often when something deep in our code goes wrong, we have only our exceptions to rely on propagating error messages. But
+what if what happens isn't an actual "exception"? Exceptions should be just that. Exceptional. For everything else a
+simple Result will suffice.
 
 # installation
 
@@ -19,9 +20,9 @@ Get this dependency with the latest version
 
 # usage
 
-Everything can be handled through the Result interface. Whenever you have some process that could
-possibly fail, make sure that it returns a Result. Which Result should be returned can be chosen
-manually or by passing the process as a function into the fromDelegate methods.
+Everything can be handled through the Result interface. Whenever you have some process that could possibly fail, make
+sure that it returns a Result. Which Result should be returned can be chosen manually or by passing the process as a
+function into the fromDelegate methods.
 
 ```
 if (everythingWentWellInAVoidProcess()) {

@@ -36,7 +36,7 @@ abstract class AbstractResult<T> implements Result<T> {
   @Override
   public boolean isSuccessful() {
     return resultStatus.equals(ResultStatus.SUCCESS)
-        || resultStatus.equals(ResultStatus.EMPTY_RESOURCE);
+            || resultStatus.equals(ResultStatus.EMPTY_RESOURCE);
   }
 
   @Override

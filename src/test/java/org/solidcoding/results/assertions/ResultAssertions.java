@@ -41,8 +41,8 @@ public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Res
     }
     if (!actual.getOptionalContents().get().equals(content)) {
       failWithMessage("Expected Result to have content equal to %s but was %s",
-                      content,
-                      actual.getContents());
+              content,
+              actual.getContents());
     }
     return this;
   }
@@ -57,8 +57,8 @@ public class ResultAssertions<T> extends AbstractAssert<ResultAssertions<T>, Res
   public ResultAssertions<T> containsMessage(String message) {
     if (!actual.getMessage().equals(message)) {
       failWithMessage("Expected Result to have a message equal to %s but was %s",
-                      message,
-                      actual.getMessage());
+              message,
+              actual.getMessage());
     }
     return this;
   }
