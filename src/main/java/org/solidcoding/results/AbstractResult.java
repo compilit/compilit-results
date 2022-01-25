@@ -2,9 +2,10 @@ package org.solidcoding.results;
 
 import java.util.Optional;
 
+import static org.solidcoding.results.Message.NOTHING_TO_REPORT;
+
 abstract class AbstractResult<T> implements Result<T> {
 
-  private static final String NOTHING_TO_REPORT = "Nothing to report";
   private final ResultStatus resultStatus;
   private final T contents;
   private final String message;

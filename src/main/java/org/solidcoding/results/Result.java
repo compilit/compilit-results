@@ -4,6 +4,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static org.solidcoding.results.MessageFormatter.formatMessage;
+
 public interface Result<T> {
 
   /**
@@ -49,7 +51,7 @@ public interface Result<T> {
    * @return an empty resource Result with a message.
    */
   static <T> Result<T> emptyResource(String message, String... formatArguments) {
-    var actualMessage = String.format(message, (Object[]) formatArguments);
+    var actualMessage = formatMessage(message, (Object[]) formatArguments);
     return new EmptyResourceResult<>(actualMessage);
   }
 
@@ -72,7 +74,7 @@ public interface Result<T> {
    * @return a not found Result with a message.
    */
   static <T> Result<T> notFound(String message, String... formatArguments) {
-    var actualMessage = String.format(message, (Object[]) formatArguments);
+    var actualMessage = formatMessage(message, (Object[]) formatArguments);
     return new NotFoundResult<>(actualMessage);
   }
 
@@ -95,7 +97,7 @@ public interface Result<T> {
    * @return an unprocessable Result with a message.
    */
   static <T> Result<T> unprocessable(String message, String... formatArguments) {
-    var actualMessage = String.format(message, (Object[]) formatArguments);
+    var actualMessage = formatMessage(message, (Object[]) formatArguments);
     return new UnprocessableResult<>(actualMessage);
   }
 
@@ -118,7 +120,7 @@ public interface Result<T> {
    * @return an empty unauthorized Result with a message.
    */
   static <T> Result<T> unauthorized(String message, String... formatArguments) {
-    var actualMessage = String.format(message, (Object[]) formatArguments);
+    var actualMessage = formatMessage(message, (Object[]) formatArguments);
     return new UnauthorizedResult<>(actualMessage);
   }
 
@@ -131,7 +133,7 @@ public interface Result<T> {
    * @return an error occurred Result with a message.
    */
   static <T> Result<T> errorOccurred(String message, String... formatArguments) {
-    var actualMessage = String.format(message, (Object[]) formatArguments);
+    var actualMessage = formatMessage(message, (Object[]) formatArguments);
     return new ErrorOccurredResult<>(actualMessage);
   }
 
@@ -234,7 +236,7 @@ public interface Result<T> {
    */
   static <T> Result<T> fromResult(Result<?> result, String message, String... formatArguments) {
     var resultStatus = result.getResultStatus();
-    var actualMessage = String.format(message, (Object[]) formatArguments);
+    var actualMessage = formatMessage(message, (Object[]) formatArguments);
     return Result.of(resultStatus, actualMessage);
   }
 

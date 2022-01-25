@@ -226,6 +226,22 @@ class ResultTests {
   }
 
   @Test
+  void emptyResource_withNullMessage_shouldReturnDefaultMessage() {
+    var expected = Message.NO_MESSAGE_AVAILABLE;
+    var result = Result.emptyResource(null);
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
+  }
+
+  @Test
+  void emptyResource_withoutFormatArgs_shouldReturnMessage() {
+    var expected = "test";
+    var result = Result.emptyResource(expected);
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
+  }
+
+  @Test
   void isEmpty_emptyResult_shouldReturnTrue() {
     var result = Result.emptyResource();
     Assertions.assertThat(result.isEmpty()).isTrue();
