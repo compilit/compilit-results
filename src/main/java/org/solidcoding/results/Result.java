@@ -6,6 +6,10 @@ import java.util.function.Supplier;
 
 import static org.solidcoding.results.MessageFormatter.formatMessage;
 
+/**
+ * This interface is your entrypoint for all result operations.
+ * @param <T> The type of the result you wish to return.
+ */
 public interface Result<T> {
 
   /**
