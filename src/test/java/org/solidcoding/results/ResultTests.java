@@ -242,6 +242,14 @@ class ResultTests {
   }
 
   @Test
+  void emptyResource_withNullFormatArgs_shouldReturnMessage() {
+    var expected = "test";
+    var result = Result.emptyResource(expected, null);
+    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
+  }
+
+  @Test
   void isEmpty_emptyResult_shouldReturnTrue() {
     var result = Result.emptyResource();
     Assertions.assertThat(result.isEmpty()).isTrue();

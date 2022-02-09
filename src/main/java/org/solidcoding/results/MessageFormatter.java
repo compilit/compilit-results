@@ -10,7 +10,7 @@ class MessageFormatter {
   public static String formatMessage(String message, Object... formatArguments) {
     if (message == null)
       return NO_MESSAGE_AVAILABLE;
-    if (formatArguments.length == 0)
+    if (formatArguments == null || formatArguments.length == 0)
       return message;
     return String.format(message, formatArguments);
   }
