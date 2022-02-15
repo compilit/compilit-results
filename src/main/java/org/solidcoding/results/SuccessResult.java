@@ -2,11 +2,11 @@ package org.solidcoding.results;
 
 class SuccessResult<T> extends AbstractResult<T> {
 
-  public SuccessResult() {
+  SuccessResult() {
     super(ResultStatus.SUCCESS);
   }
 
-  public SuccessResult(T contents) {
+  SuccessResult(T contents) {
     super(ResultStatus.SUCCESS, contents);
   }
 

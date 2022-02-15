@@ -2,11 +2,11 @@ package org.solidcoding.results;
 
 class UnauthorizedResult<T> extends AbstractResult<T> {
 
-  public UnauthorizedResult() {
+  UnauthorizedResult() {
     super(ResultStatus.UNAUTHORIZED);
   }
 
-  public UnauthorizedResult(String message) {
+  UnauthorizedResult(String message) {
     super(ResultStatus.UNAUTHORIZED, message);
   }
 
