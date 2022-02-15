@@ -31,33 +31,7 @@ public interface Result<T> {
    * @return a success Result with contents. Or an empty resource Result if the content is null.
    */
   static <T> Result<T> success(T contents) {
-    if (contents == null) {
-      return new EmptyResourceResult<>();
-    }
     return new SuccessResult<>(contents);
-  }
-
-  /**
-   * A generic result for when the client asks for a non-existent value in an existing resource.
-   *
-   * @param <T> the content type.
-   * @return an empty resource Result without a message.
-   */
-  static <T> Result<T> emptyResource() {
-    return new EmptyResourceResult<>();
-  }
-
-  /**
-   * A generic result for when the client asks for a non-existent value in an existing resource.
-   *
-   * @param <T>             the content type.
-   * @param message         the message you wish to propagate.
-   * @param formatArguments the message arguments you with to replace the '%s' symbol with.
-   * @return an empty resource Result with a message.
-   */
-  static <T> Result<T> emptyResource(String message, String... formatArguments) {
-    var actualMessage = formatMessage(message, (Object[]) formatArguments);
-    return new EmptyResourceResult<>(actualMessage);
   }
 
   /**
@@ -150,7 +124,7 @@ public interface Result<T> {
    * @param <T>      the content type.
    * @return SuccessResult or ErrorOccurredResult with the exception message.
    */
-  static <T> Result<T> fromDelegate(Runnable runnable) {
+  static <T> Result<T> resultOf(Runnable runnable) {
     try {
       runnable.run();
       return Result.success();
@@ -168,7 +142,7 @@ public interface Result<T> {
    * @param <T>      the type of the contents.
    * @return SuccessResult or ErrorOccurredResult with the exception message.
    */
-  static <T> Result<T> fromDelegate(Supplier<T> supplier) {
+  static <T> Result<T> resultOf(Supplier<T> supplier) {
     try {
       var result = supplier.get();
       return Result.success(result);
@@ -188,7 +162,7 @@ public interface Result<T> {
    * @param <T>       the type of the contents.
    * @return SuccessResult, UnprocessableResult or ErrorOccurredResult with the exception message.
    */
-  static <T> Result<T> fromDelegate(Predicate<T> predicate, T value) {
+  static <T> Result<T> resultOf(Predicate<T> predicate, T value) {
     try {
       var result = predicate.test(value);
       if (result) {
@@ -211,7 +185,7 @@ public interface Result<T> {
   static <T> Result<T> fromResult(Result<?> result) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
-    return Result.of(resultStatus, resultMessage);
+    return Result.resultOf(resultStatus, resultMessage);
   }
 
   /**
@@ -226,7 +200,7 @@ public interface Result<T> {
   static <T> Result<T> fromResult(Result<?> result, T content) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
-    return Result.of(resultStatus, resultMessage, content);
+    return Result.resultOf(resultStatus, resultMessage, content);
   }
 
   /**
@@ -242,19 +216,7 @@ public interface Result<T> {
   static <T> Result<T> fromResult(Result<?> result, String message, String... formatArguments) {
     var resultStatus = result.getResultStatus();
     var actualMessage = formatMessage(message, (Object[]) formatArguments);
-    return Result.of(resultStatus, actualMessage);
-  }
-
-  /**
-   * Will return either a Success result or an EmptyResource result depending on whether the
-   * Optional isPresent,
-   *
-   * @param optional the optional value of the result to return.
-   * @param <T>      the content type of the new Result.
-   * @return SuccessResult or EmptyResourceResult.
-   */
-  static <T> Result<T> fromOptional(Optional<T> optional) {
-    return optional.map(Result::success).orElseGet(Result::emptyResource);
+    return Result.resultOf(resultStatus, actualMessage);
   }
 
   /**
@@ -266,11 +228,11 @@ public interface Result<T> {
     return new ResultToListCombiner<>(result);
   }
 
-  private static <T> Result<T> of(ResultStatus resultStatus, String message) {
-    return of(resultStatus, message, null);
+  private static <T> Result<T> resultOf(ResultStatus resultStatus, String message) {
+    return resultOf(resultStatus, message, null);
   }
 
-  private static <T> Result<T> of(ResultStatus resultStatus, String message, T content) {
+  private static <T> Result<T> resultOf(ResultStatus resultStatus, String message, T content) {
     switch (resultStatus) {
       case SUCCESS:
         return Result.success(content);
@@ -278,8 +240,6 @@ public interface Result<T> {
         return Result.unauthorized(message);
       case NOT_FOUND:
         return Result.notFound(message);
-      case EMPTY_RESOURCE:
-        return Result.emptyResource(message);
       case ERROR_OCCURRED:
         return Result.errorOccurred(message);
       default:
@@ -298,12 +258,12 @@ public interface Result<T> {
   boolean isSuccessful();
 
   /**
-   * @return true if the ResultStatus equals SUCCESS or EMPTY_RESOURCE and has contents
+   * @return true if the ResultStatus equals SUCCESS and has contents
    */
   boolean isSuccessfulWithContents();
 
   /**
-   * @return true if the ResultStatus does not equal SUCCESS or EMPTY_RESOURCE.
+   * @return true if the ResultStatus does not equal SUCCESS.
    */
   boolean isUnsuccessful();
 
@@ -318,7 +278,7 @@ public interface Result<T> {
   boolean isEmpty();
 
   /**
-   * @return the contents of the result. Can be null
+   * @return the contents of the result. Can be null.
    */
   T getContents();
 

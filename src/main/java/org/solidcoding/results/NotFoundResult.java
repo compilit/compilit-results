@@ -2,11 +2,11 @@ package org.solidcoding.results;
 
 class NotFoundResult<T> extends AbstractResult<T> {
 
-  public NotFoundResult() {
+  NotFoundResult() {
     super(ResultStatus.NOT_FOUND);
   }
 
-  public NotFoundResult(String message) {
+  NotFoundResult(String message) {
     super(ResultStatus.NOT_FOUND, message);
   }
 

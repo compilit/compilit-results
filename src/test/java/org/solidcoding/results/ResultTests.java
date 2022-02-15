@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.solidcoding.results.assertions.ResultAssertions;
 import org.solidcoding.results.testutil.TestValue;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static org.solidcoding.results.Message.MESSAGE_FORMAT_ERROR;
+import static org.solidcoding.results.Message.NOTHING_TO_REPORT;
 import static org.solidcoding.results.testutil.TestValue.TEST_CONTENT;
 import static org.solidcoding.results.testutil.TestValue.TEST_MESSAGE;
 
@@ -28,14 +29,8 @@ class ResultTests {
   }
 
   @Test
-  void emptyResource_shouldReturnSuccessResult() {
-    ResultAssertions.assertThat(Result.emptyResource()).isValidSuccessResult()
-            .isEmpty();
-  }
-
-  @Test
-  void emptyResource_withMessage_shouldReturnSuccessResult() {
-    ResultAssertions.assertThat(Result.emptyResource(TestValue.TEST_MESSAGE))
+  void success_withMessage_shouldReturnSuccessResult() {
+    ResultAssertions.assertThat(Result.success(TestValue.TEST_MESSAGE))
             .isValidSuccessResult()
             .containsMessage(TestValue.TEST_MESSAGE);
   }
@@ -88,43 +83,29 @@ class ResultTests {
   }
 
   @Test
-  void fromOptional_emptyOptional_shouldReturnEmptyResourceResult() {
-    var result = Result.fromOptional(Optional.empty());
-    ResultAssertions.assertThat(result).isValidSuccessResult()
-            .isEmpty();
-  }
-
-  @Test
-  void fromOptional_filledOptional_shouldReturnSuccessResult() {
-    var result = Result.fromOptional(Optional.of(TEST_CONTENT));
-    ResultAssertions.assertThat(result).isValidSuccessResult()
-            .hasContent();
-  }
-
-  @Test
   void fromDelegate_SuccessfulRunnable_shouldReturnSuccessResult() {
-    var result = Result.fromDelegate(() -> System.out.println(TEST_CONTENT));
+    var result = Result.resultOf(() -> System.out.println(TEST_CONTENT));
     ResultAssertions.assertThat(result).isValidSuccessResult()
             .isEmpty();
   }
 
   @Test
   void fromDelegate_ExceptionalRunnable_shouldReturnSuccessResult() {
-    var result = Result.fromDelegate(() -> System.out.println(TEST_CONTENT));
+    var result = Result.resultOf(() -> System.out.println(TEST_CONTENT));
     ResultAssertions.assertThat(result).isValidSuccessResult()
             .isEmpty();
   }
 
   @Test
   void fromDelegate_SuccessfulPredicate_shouldReturnSuccessResult() {
-    var result = Result.fromDelegate(x -> true, null);
+    var result = Result.resultOf(x -> true, null);
     ResultAssertions.assertThat(result).isValidSuccessResult()
             .isEmpty();
   }
 
   @Test
   void fromDelegate_UnsuccessfulPredicate_shouldReturnUnprocessableResult() {
-    var result = Result.fromDelegate(x -> false, null);
+    var result = Result.resultOf(x -> false, null);
     ResultAssertions.assertThat(result).isValidUnsuccessfulResult()
             .isEmpty();
   }
@@ -139,14 +120,14 @@ class ResultTests {
       }
     };
     var message = exception.getMessage();
-    var result = Result.fromDelegate(throwingPredicate, null);
+    var result = Result.resultOf(throwingPredicate, null);
     ResultAssertions.assertThat(result).isValidUnsuccessfulResult().containsMessage(message);
   }
 
   @Test
   void fromDelegate_SuccessfulSupplier_shouldReturnSuccessResult() {
     Supplier<String> supplier = () -> TEST_CONTENT;
-    var result = Result.fromDelegate(supplier);
+    var result = Result.resultOf(supplier);
     ResultAssertions.assertThat(result)
             .isValidSuccessResult()
             .containsContent(TEST_CONTENT);
@@ -162,7 +143,7 @@ class ResultTests {
       }
     };
     var message = exception.getMessage();
-    var result = Result.fromDelegate(throwingRunnable);
+    var result = Result.resultOf(throwingRunnable);
     ResultAssertions.assertThat(result).isValidUnsuccessfulResult().containsMessage(message);
   }
 
@@ -218,40 +199,41 @@ class ResultTests {
   }
 
   @Test
-  void emptyResource_withFormattedMessage_shouldReturnFormattedMessage() {
-    var expected = String.format("test %s", "test");
-    var result = Result.emptyResource("test %s", "test");
-    Assertions.assertThat(result.getMessage()).isEqualTo(expected);
-    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
-  }
-
-  @Test
-  void emptyResource_withNullMessage_shouldReturnDefaultMessage() {
+  void notFound_withNullMessage_shouldReturnDefaultMessage() {
     var expected = Message.NO_MESSAGE_AVAILABLE;
-    var result = Result.emptyResource(null);
+    var result = Result.success(null);
     Assertions.assertThat(result.getMessage()).isEqualTo(expected);
-    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.NOT_FOUND);
   }
 
   @Test
-  void emptyResource_withoutFormatArgs_shouldReturnMessage() {
+  void notFound_withoutFormatArgs_shouldReturnMessage() {
     var expected = "test";
-    var result = Result.emptyResource(expected);
+    var result = Result.success(expected);
     Assertions.assertThat(result.getMessage()).isEqualTo(expected);
-    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.NOT_FOUND);
   }
 
   @Test
-  void emptyResource_withNullFormatArgs_shouldReturnMessage() {
+  void notFound_withNullFormatArgs_shouldReturnMessage() {
     var expected = "test";
-    var result = Result.emptyResource(expected, null);
+    var result = Result.notFound(expected, null);
     Assertions.assertThat(result.getMessage()).isEqualTo(expected);
-    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.EMPTY_RESOURCE);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.NOT_FOUND);
+  }
+
+  @Test
+  void notFound_withInvalidFormatPlaceholders_shouldReturnMessageContainingExceptionMessage() {
+    var message = "test %s, %s";
+    var expected = MESSAGE_FORMAT_ERROR;
+    var result = Result.notFound(message, "test");
+    Assertions.assertThat(result.getMessage()).contains(expected);
+    Assertions.assertThat(result.getResultStatus()).isEqualTo(ResultStatus.NOT_FOUND);
   }
 
   @Test
   void isEmpty_emptyResult_shouldReturnTrue() {
-    var result = Result.emptyResource();
+    var result = Result.success();
     Assertions.assertThat(result.isEmpty()).isTrue();
   }
 
@@ -263,7 +245,7 @@ class ResultTests {
 
   @Test
   void isSuccessfulWithContents_successfulEmptyResult_shouldReturnFalse() {
-    var result = Result.emptyResource();
+    var result = Result.success();
     Assertions.assertThat(result.isSuccessfulWithContents()).isFalse();
   }
 
@@ -278,8 +260,8 @@ class ResultTests {
     Assertions.assertThat(Result.success().getResultStatus()).isEqualTo(ResultStatus.SUCCESS);
     Assertions.assertThat(Result.errorOccurred(TEST_MESSAGE).getResultStatus())
             .isEqualTo(ResultStatus.ERROR_OCCURRED);
-    Assertions.assertThat(Result.emptyResource().getResultStatus())
-            .isEqualTo(ResultStatus.EMPTY_RESOURCE);
+    Assertions.assertThat(Result.success().getResultStatus())
+            .isEqualTo(ResultStatus.SUCCESS);
     Assertions.assertThat(Result.notFound().getResultStatus()).isEqualTo(ResultStatus.NOT_FOUND);
     Assertions.assertThat(Result.unauthorized().getResultStatus())
             .isEqualTo(ResultStatus.UNAUTHORIZED);
@@ -329,7 +311,7 @@ class ResultTests {
     var errorResult = Result.errorOccurred(errorMessage);
     Assertions.assertThat(errorResult.getMessage()).isEqualTo(errorMessage);
     var successResult = Result.success();
-    Assertions.assertThat(successResult.getMessage()).isEqualTo("Nothing to report");
+    Assertions.assertThat(successResult.getMessage()).isEqualTo(NOTHING_TO_REPORT);
   }
 
   @Test
@@ -371,7 +353,7 @@ class ResultTests {
     var resultOne = Result.success(contentsOne);
     var resultTwo = Result.success(contentsTwo);
     var resultThree = Result.success(contentsThree);
-    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).merge();
+    var actual = Result.combine(resultOne).with(resultTwo).and(resultThree).merge();
 
     ResultAssertions.assertThat(actual).isValidSuccessResult()
             .hasContent();
@@ -386,7 +368,7 @@ class ResultTests {
     var resultOne = Result.<String>errorOccurred(contentsOne);
     var resultTwo = Result.success(contentsTwo);
     var resultThree = Result.success(contentsThree);
-    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).merge();
+    var actual = Result.combine(resultOne).with(resultTwo).and(resultThree).merge();
 
     ResultAssertions.assertThat(actual).isValidUnsuccessfulResult()
             .isEmpty();
@@ -400,7 +382,7 @@ class ResultTests {
     var resultOne = Result.success(contentsOne);
     var resultTwo = Result.success(contentsTwo);
     var resultThree = Result.success(contentsThree);
-    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).sum();
+    var actual = Result.combine(resultOne).with(resultTwo).and(resultThree).sum();
 
     ResultAssertions.assertThat(actual).isValidSuccessResult()
             .isEmpty();
@@ -414,7 +396,7 @@ class ResultTests {
     var resultOne = Result.<String>errorOccurred(contentsOne);
     var resultTwo = Result.success(contentsTwo);
     var resultThree = Result.success(contentsThree);
-    var actual = Result.combine(resultOne).with(resultTwo).with(resultThree).sum();
+    var actual = Result.combine(resultOne).with(resultTwo).and(resultThree).sum();
 
     ResultAssertions.assertThat(actual).isValidUnsuccessfulResult()
             .isEmpty();

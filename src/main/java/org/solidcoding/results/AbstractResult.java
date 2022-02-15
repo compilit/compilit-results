@@ -10,34 +10,27 @@ abstract class AbstractResult<T> implements Result<T> {
   private final T contents;
   private final String message;
 
-  protected AbstractResult(ResultStatus resultStatus) {
+  AbstractResult(ResultStatus resultStatus) {
     this.resultStatus = resultStatus;
     this.contents = null;
     this.message = NOTHING_TO_REPORT;
   }
 
-  protected AbstractResult(ResultStatus resultStatus, String message) {
+  AbstractResult(ResultStatus resultStatus, String message) {
     this.resultStatus = resultStatus;
     this.contents = null;
     this.message = message;
   }
 
-  protected AbstractResult(ResultStatus resultStatus, T contents) {
+  AbstractResult(ResultStatus resultStatus, T contents) {
     this.resultStatus = resultStatus;
     this.contents = contents;
     this.message = NOTHING_TO_REPORT;
-  }
-
-  protected AbstractResult(ResultStatus resultStatus, T contents, String message) {
-    this.resultStatus = resultStatus;
-    this.message = message;
-    this.contents = contents;
   }
 
   @Override
   public boolean isSuccessful() {
-    return resultStatus.equals(ResultStatus.SUCCESS)
-            || resultStatus.equals(ResultStatus.EMPTY_RESOURCE);
+    return resultStatus.equals(ResultStatus.SUCCESS);
   }
 
   @Override
