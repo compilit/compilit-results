@@ -1,4 +1,4 @@
-# solidcoding-results
+# compilit-results
 
 Simple library to encapsulate and propagate processing results. Inspired by Results in the Rust programming
 language. (https://doc.rust-lang.org/std/result/enum.Result.html)
@@ -16,10 +16,10 @@ straightforward to map a Result to a server response, be cautious.
 
 Get this dependency with the latest version
 
-```
+```xml
     <dependency>
-      <artifactId>solidcoding-results</artifactId>
-      <groupId>org.solidcoding</groupId>
+      <artifactId>compilit-results</artifactId>
+      <groupId>com.compilit</groupId>
     </dependency>
 ```
 
@@ -29,7 +29,7 @@ Everything can be handled through the Result interface. Whenever you have some p
 sure that it returns a Result. Which Result should be returned can be chosen manually or by passing the process as a
 function into the resultOf methods.
 
-```
+```java
 if (everythingWentWellInAVoidProcess()) {
   return Result.success();
 }

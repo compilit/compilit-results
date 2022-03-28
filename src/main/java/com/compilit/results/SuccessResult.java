@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 class SuccessResult<T> extends AbstractResult<T> {
 

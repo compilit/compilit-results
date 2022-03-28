@@ -1,4 +1,4 @@
-package org.solidcoding.results.testutil;
+package com.compilit.results.testutil;
 
 public class TestValue {
 

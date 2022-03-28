@@ -5,19 +5,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>solidcoding-parent</artifactId>
-        <groupId>org.solidcoding</groupId>
+        <artifactId>compilit-parent</artifactId>
+        <groupId>com.compilit</groupId>
         <version>1.1.0</version>
     </parent>
 
-    <artifactId>solidcoding-results</artifactId>
+    <artifactId>compilit-results</artifactId>
     <version>2.0.0</version>
 
-    <name>Solidcoding results</name>
+    <name>Compilit results</name>
     <description>A small package that enables you to encapsulate and propagate processing/validation
         results with their corresponding message and status.
     </description>
-    <url>https://github.com/solidcoding-org/solidcoding-results</url>
+    <url>https://github.com/compilit/compilit-results</url>
 
     <dependencies>
         <dependency>

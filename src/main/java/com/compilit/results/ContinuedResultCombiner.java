@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 class NotFoundResult<T> extends AbstractResult<T> {
 

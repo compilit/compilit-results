@@ -1,8 +1,6 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 import java.util.List;
-
-import static org.solidcoding.results.Message.UNSUCCESSFUL_RESULT;
 
 final class ContinuedResultToListCombiner<T> extends AbstractResultCombiner<T> implements ContinuedResultCombiner<T> {
 
@@ -31,7 +29,7 @@ final class ContinuedResultToListCombiner<T> extends AbstractResultCombiner<T> i
   }
 
   private String prepareMessage() {
-    var stringBuilder = new StringBuilder(UNSUCCESSFUL_RESULT);
+    var stringBuilder = new StringBuilder(Message.UNSUCCESSFUL_RESULT);
     for (int index = 0; index < messages.size(); index++) {
       var message = messages.get(index);
       stringBuilder.append("message-").append(index + 1).append(": ").append(message);

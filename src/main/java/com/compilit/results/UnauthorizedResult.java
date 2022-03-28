@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 class UnauthorizedResult<T> extends AbstractResult<T> {
 

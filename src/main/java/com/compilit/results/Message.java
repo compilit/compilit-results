@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 class Message {
   static final String NOTHING_TO_REPORT = "Nothing to report";

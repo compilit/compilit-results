@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 final class ResultToListCombiner<T> extends AbstractResultCombiner<T> implements ResultCombiner<T> {
 

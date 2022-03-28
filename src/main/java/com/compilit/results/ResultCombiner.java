@@ -1,4 +1,4 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 public interface ResultCombiner<T> {
 

@@ -1,10 +1,8 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-
-import static org.solidcoding.results.MessageFormatter.formatMessage;
 
 /**
  * This interface is your entrypoint for all result operations.
@@ -53,7 +51,7 @@ public interface Result<T> {
    * @return a not found Result with a message.
    */
   static <T> Result<T> notFound(String message, String... formatArguments) {
-    var actualMessage = formatMessage(message, (Object[]) formatArguments);
+    var actualMessage = MessageFormatter.formatMessage(message, (Object[]) formatArguments);
     return new NotFoundResult<>(actualMessage);
   }
 
@@ -76,7 +74,7 @@ public interface Result<T> {
    * @return an unprocessable Result with a message.
    */
   static <T> Result<T> unprocessable(String message, String... formatArguments) {
-    var actualMessage = formatMessage(message, (Object[]) formatArguments);
+    var actualMessage = MessageFormatter.formatMessage(message, (Object[]) formatArguments);
     return new UnprocessableResult<>(actualMessage);
   }
 
@@ -99,7 +97,7 @@ public interface Result<T> {
    * @return an empty unauthorized Result with a message.
    */
   static <T> Result<T> unauthorized(String message, String... formatArguments) {
-    var actualMessage = formatMessage(message, (Object[]) formatArguments);
+    var actualMessage = MessageFormatter.formatMessage(message, (Object[]) formatArguments);
     return new UnauthorizedResult<>(actualMessage);
   }
 
@@ -112,7 +110,7 @@ public interface Result<T> {
    * @return an error occurred Result with a message.
    */
   static <T> Result<T> errorOccurred(String message, String... formatArguments) {
-    var actualMessage = formatMessage(message, (Object[]) formatArguments);
+    var actualMessage = MessageFormatter.formatMessage(message, (Object[]) formatArguments);
     return new ErrorOccurredResult<>(actualMessage);
   }
 
@@ -185,7 +183,7 @@ public interface Result<T> {
   static <T> Result<T> fromResult(Result<?> result) {
     var resultStatus = result.getResultStatus();
     var resultMessage = result.getMessage();
-    return Result.resultOf(resultStatus, resultMessage);
+    return resultOf(resultStatus, resultMessage);
   }
 
   /**
@@ -215,8 +213,8 @@ public interface Result<T> {
    */
   static <T> Result<T> fromResult(Result<?> result, String message, String... formatArguments) {
     var resultStatus = result.getResultStatus();
-    var actualMessage = formatMessage(message, (Object[]) formatArguments);
-    return Result.resultOf(resultStatus, actualMessage);
+    var actualMessage = MessageFormatter.formatMessage(message, (Object[]) formatArguments);
+    return resultOf(resultStatus, actualMessage);
   }
 
   /**

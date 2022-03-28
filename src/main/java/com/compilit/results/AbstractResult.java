@@ -1,8 +1,6 @@
-package org.solidcoding.results;
+package com.compilit.results;
 
 import java.util.Optional;
-
-import static org.solidcoding.results.Message.NOTHING_TO_REPORT;
 
 abstract class AbstractResult<T> implements Result<T> {
 
@@ -13,7 +11,7 @@ abstract class AbstractResult<T> implements Result<T> {
   AbstractResult(ResultStatus resultStatus) {
     this.resultStatus = resultStatus;
     this.contents = null;
-    this.message = NOTHING_TO_REPORT;
+    this.message = Message.NOTHING_TO_REPORT;
   }
 
   AbstractResult(ResultStatus resultStatus, String message) {
@@ -25,7 +23,7 @@ abstract class AbstractResult<T> implements Result<T> {
   AbstractResult(ResultStatus resultStatus, T contents) {
     this.resultStatus = resultStatus;
     this.contents = contents;
-    this.message = NOTHING_TO_REPORT;
+    this.message = Message.NOTHING_TO_REPORT;
   }
 
   @Override
